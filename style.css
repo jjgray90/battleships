@@ -23,3 +23,6 @@
 .game-board .miss {
   background-color: whitesmoke;
 }
+.game-board .ship {
+  background-color: darkgray;
+}
