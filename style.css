@@ -9,6 +9,7 @@
 }
 .game-board .game-board__square {
   border: 0.5px solid black;
+  background-color: lightskyblue;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,6 +17,9 @@
   height: 100%;
   cursor: pointer;
 }
-.game-board .red {
+.game-board .hit {
   background-color: red;
+}
+.game-board .miss {
+  background-color: whitesmoke;
 }
