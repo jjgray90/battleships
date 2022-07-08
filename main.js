@@ -38,22 +38,31 @@ const placeShips = () => {
   ships.forEach((ship) => {
     let rowStart = getRandomInt(9);
     let colStart = getRandomInt(9);
-    let shipPos = (newUserArray[rowStart][colStart] = ship);
+    let shipPos = "";
 
     console.log("Ship" + ship, rowStart, colStart);
 
-    for (let i = ship; i > 0; i--) {
-      console.log(rowStart, colStart);
-      if (rowStart <= ship) {
+    if (rowStart <= ship) {
+      for (i = ship; i > 0; i--) {
         shipPos = newUserArray[rowStart++][colStart] = ship;
-      } else if (colStart <= ship) {
+        console.log("Ship" + ship, rowStart, colStart);
+      }
+    } else if (colStart <= ship) {
+      for (i = ship; i > 0; i--) {
         shipPos = newUserArray[rowStart][colStart++] = ship;
-      } else if (rowStart >= ship) {
+        console.log("Ship" + ship, rowStart, colStart);
+      }
+    } else if (rowStart >= ship) {
+      for (i = ship; i > 0; i--) {
         shipPos = newUserArray[rowStart--][colStart] = ship;
-      } else if (colStart >= ship) {
+        console.log("Ship" + ship, rowStart, colStart);
+      }
+    } else if (colStart >= ship) {
+      for (i = ship; i > 0; i--) {
         shipPos = newUserArray[rowStart][colStart--] = ship;
-      } else rowStart = getRandomInt(9);
-    }
+        console.log("Ship" + ship, rowStart, colStart);
+      }
+    } else console.log("shit the bed");
   });
 };
 
