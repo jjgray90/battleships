@@ -6,14 +6,14 @@ const ships = [5, 4, 3, 2, 3];
 
 const computerGame = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 3, 0, 0, 0, 3, 3, 3, 0],
-  [0, 3, 0, 0, 0, 0, 0, 0, 0],
-  [0, 3, 0, 0, 0, 0, 0, 0, 0],
-  [0, 3, 0, 0, 3, 0, 0, 0, 0],
-  [0, 3, 0, 0, 3, 0, 0, 3, 0],
-  [0, 0, 0, 0, 3, 0, 0, 3, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 3, 3, 3, 3, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 const userGame = [
@@ -32,37 +32,46 @@ const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
 };
 
+const checkShips = (array, ship) => {
+  array.forEach((coord) =>
+    computerGame[coord[0]][coord[1]] === 0
+      ? (computerGame[coord[0]][coord[1]] = ship)
+      : placeShips()
+  );
+};
+
 const placeShips = () => {
   // loop through array. At each element, place a 3 in a single direction for until loop stops
-  let newUserArray = [...userGame];
   ships.forEach((ship) => {
     let rowStart = getRandomInt(9);
     let colStart = getRandomInt(9);
-    let shipPos = "";
-
-    console.log("Ship" + ship, rowStart, colStart);
+    const checkArr = [];
 
     if (rowStart <= ship) {
       for (i = ship; i > 0; i--) {
-        shipPos = newUserArray[rowStart++][colStart] = ship;
-        console.log("Ship" + ship, rowStart, colStart);
+        checkArr.push([rowStart++, colStart]);
       }
+      console.log(checkArr);
+      checkShips(checkArr, ship);
     } else if (colStart <= ship) {
       for (i = ship; i > 0; i--) {
-        shipPos = newUserArray[rowStart][colStart++] = ship;
-        console.log("Ship" + ship, rowStart, colStart);
+        checkArr.push([rowStart, colStart++]);
       }
+      console.log(checkArr);
+      checkShips(checkArr, ship);
     } else if (rowStart >= ship) {
       for (i = ship; i > 0; i--) {
-        shipPos = newUserArray[rowStart--][colStart] = ship;
-        console.log("Ship" + ship, rowStart, colStart);
+        checkArr.push([rowStart--, colStart]);
       }
+      console.log(checkArr);
+      checkShips(checkArr, ship);
     } else if (colStart >= ship) {
       for (i = ship; i > 0; i--) {
-        shipPos = newUserArray[rowStart][colStart--] = ship;
-        console.log("Ship" + ship, rowStart, colStart);
+        checkArr.push([rowStart, colStart--]);
       }
-    } else console.log("shit the bed");
+      console.log(checkArr);
+      checkShips(checkArr, ship);
+    }
   });
 };
 
