@@ -5,15 +5,15 @@ const gameSquare = document.querySelector(".game-board__square");
 const playButton = document.querySelector(".game-button");
 const modal = document.querySelector(".modal");
 const modalText = document.querySelector(".modal-content__message");
-const modalButton = document.querySelector(".modal-content__button");
+const modalButton = document.querySelector("#modal-button");
+
+console.log(modalButton);
 
 let userGameClock = 0;
 let computerGameClock = 0;
 
 let ships = [5, 4, 3, 2, 3];
 let shipCount = 0;
-
-console.log(gameContainer.style.display);
 
 let computerGame = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -109,18 +109,23 @@ const drawBoard = (player, gameBoard) => {
   gameBoard.innerHTML = "";
   let squareClass = "";
   let shipClass = "";
+  let check = "";
   for (let r = 0; r < player.length; r++) {
     for (let c = 0; c < player.length; c++) {
       if (player === userGame && player[r][c] === 3) {
         squareClass = "ship";
+        check = player[r][c];
       } else if (player === userGame && player[r][c] === 4) {
         squareClass = "hit";
         shipClass = "ship";
+        check = player[r][c];
       } else if (player[r][c] === 4) {
         squareClass = "hit";
+        check = player[r][c];
       } else if (player[r][c] === 1) {
         squareClass = "miss";
         shipClass = "";
+        check = player[r][c];
       } else {
         squareClass = "";
         shipClass = "";
@@ -128,7 +133,7 @@ const drawBoard = (player, gameBoard) => {
 
       gameBoard.innerHTML += `<div class="game-board__square ${shipClass}" id=${
         "s" + r + c
-      }><div class=${squareClass}></div></div>`;
+      }><div class=${squareClass} id=${"s" + r + c}></div></div>`;
     }
   }
 };
@@ -145,11 +150,16 @@ const fireTorpedo = (event) => {
   let row = event.target.id.substr(1, 1);
   let column = event.target.id.substr(2, 1);
 
-  if (computerGame[row][column] == 3) {
+  if (computerGame[row][column] === 3) {
     computerGame[row][column] = 4;
     userGameClock++;
-  } else if (computerGame[row][column] == 0) {
+  } else if (computerGame[row][column] === 0) {
     computerGame[row][column] = 1;
+  } else if (
+    computerGame[row][column] === 1 ||
+    computerGame[row][column] === 4
+  ) {
+    displayModal("You've already fired there!");
   }
   drawBoard(computerGame, computerGameboard);
   checkVictory();
@@ -174,7 +184,6 @@ const compTorpedo = () => {
 };
 const alertHandler = () => {
   if (shipCount === 5) {
-    // setTimout(() => alert("Place your Battleship! (4 grid squares)"), 200);
     displayModal("Place your Battleship! <br> (4 grid squares)");
   } else if (shipCount === 9) {
     displayModal("Place your Cruiser! <br> (3 grid squares)");
@@ -190,29 +199,10 @@ const alertHandler = () => {
   }
 };
 
-// const checkShipPlacement = (row, column) => {
-//   console.log(userGame[row--][column]);
-//   if (
-//     ((shipCount > 1 && shipCount < 5) ||
-//       (shipCount > 5 && shipCount < 9) ||
-//       (shipCount > 9 && shipCount < 12) ||
-//       (shipCount > 12 && shipCount < 15) ||
-//       (shipCount > 15 && shipCount < 17)) &&
-//     (userGame[row - 1][column] !== 3 ||
-//       userGame[row + 1][column] !== 3 ||
-//       userGame[row][column - 1] !== 3 ||
-//       userGame[row][column + 1] !== 3)
-//   ) {
-//     alert("must place next to eachother");
-//   }
-// };
-
 const placeUserShips = (event) => {
   let row = event.target.id.substr(1, 1);
   let column = event.target.id.substr(2, 1);
   if (userGame[row][column] == 0 && shipCount < 17) {
-    console.log(userGame[row][column]);
-    // checkShipPlacement(row, column);
     userGame[row][column] = 3;
     shipCount++;
     alertHandler();
@@ -226,6 +216,7 @@ const startGame = () => {
   shipCount = 0;
   userGameClock = 0;
   computerGameClock = 0;
+
   computerGame = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -237,7 +228,6 @@ const startGame = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
-
   userGame = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -252,12 +242,14 @@ const startGame = () => {
 
   placeShips();
 
-  drawBoard(userGame, userGameboard);
   gameContainer.style.display = "flex";
+  drawBoard(userGame, userGameboard);
   displayModal("Place your Carrier! <br> (5 grid squares)");
 };
 
 userGameboard.addEventListener("click", placeUserShips);
 computerGameboard.addEventListener("click", fireTorpedo);
 playButton.addEventListener("click", startGame);
-modalButton.addEventListener("click", removeModal);
+if (modalButton) {
+  modalButton.addEventListener("click", removeModal);
+} else location.reload();
