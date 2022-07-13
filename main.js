@@ -13,6 +13,8 @@ let computerGameClock = 0;
 let ships = [5, 4, 3, 2, 3];
 let shipCount = 0;
 
+let hit = false;
+
 let computerGame = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -160,18 +162,38 @@ const fireTorpedo = (event) => {
 };
 
 const compTorpedo = () => {
-  while (true) {
-    let row = getRandomInt(8);
-    let column = getRandomInt(8);
-    if (userGame[row][column] == 3) {
-      userGame[row][column] = 4;
-      computerGameClock++;
-      break;
-    } else if (userGame[row][column] == 0) {
-      userGame[row][column] = 1;
-      break;
+  if (
+    hit === false ||
+    hit[0] > 8 ||
+    hit[1] > 8 ||
+    userGame[hit[0]][hit[1]] == 4
+  ) {
+    hit = false;
+    while (true) {
+      let row = getRandomInt(8);
+      let column = getRandomInt(8);
+      if (userGame[row][column] == 3) {
+        userGame[row][column] = 4;
+        hit = [row + 1, column];
+        computerGameClock++;
+        break;
+      } else if (userGame[row][column] == 0) {
+        userGame[row][column] = 1;
+        hit = false;
+        break;
+      }
     }
+  } else if (hit !== false && userGame[hit[0]][hit[1]] == 3) {
+    userGame[hit[0]][hit[1]] = 4;
+    console.log(userGame[hit[0]][hit[1]]);
+    hit = [hit[0] + 1, hit[1]];
+    computerGameClock++;
+  } else if (hit !== false && userGame[hit[0]][hit[1]] == 0) {
+    userGame[hit[0]][hit[1]] = 1;
+    hit = false;
+  } else {
   }
+  console.log(hit);
   drawBoard(userGame, userGameboard);
   checkVictory();
 };
