@@ -14,6 +14,7 @@ let ships = [5, 4, 3, 2, 3];
 let shipCount = 0;
 
 let hit = false;
+let initialHit = "";
 
 let computerGame = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -161,19 +162,104 @@ const fireTorpedo = (event) => {
   userGameClock !== 17 ? setTimeout(() => compTorpedo(), 1000) : "";
 };
 
+let direction = "down";
+
+const compNextMove = () => {
+  console.log("hit " + hit);
+  console.log("init " + initialHit);
+  // if (userGame[hit[0]][hit[1]] == 3) {
+  //   userGame[hit[0]][hit[1]] = 4;
+  //   console.log(userGame[hit[0]][hit[1]]);
+  //   hit = [hit[0] + 1, hit[1]];
+  //   computerGameClock++;
+  // } else if (userGame[hit[0]][hit[1]] == 0) {
+  //   userGame[hit[0]][hit[1]] = 1;
+  // } else {
+  //   hit = false;
+  //   compTorpedo();
+  // }
+
+  console.log("hello", direction);
+  switch (true) {
+    case hit[0] > 8:
+      direction = "up";
+      break;
+
+    case hit[1] > 8:
+      direction = "left";
+      break;
+
+    case hit[0] < 0:
+      direction = "down";
+      break;
+
+    case hit[0] < 0:
+      direction = "right";
+      break;
+
+    case userGame[hit[0]][hit[1]] === 3:
+      userGame[hit[0]][hit[1]] = 4;
+      switch (direction) {
+        case "down":
+          hit = [hit[0] + 1, hit[1]];
+          break;
+        case "right":
+          hit = [hit[0], hit[1] + 1];
+          break;
+        case "up":
+          hit = [hit[0] - 1, hit[1]];
+          break;
+        case "left":
+          hit = [hit[0], hit[1] - 1];
+      }
+      computerGameClock++;
+      break;
+
+    case userGame[hit[0]][hit[1]] === 0 && direction === "down":
+      userGame[hit[0]][hit[1]] = 1;
+      hit = [initialHit[0], initialHit[1] + 1];
+      direction = "right";
+      break;
+
+    case userGame[hit[0]][hit[1]] === 0 && direction === "right":
+      userGame[hit[0]][hit[1]] = 1;
+      hit = [initialHit[0] - 1, initialHit[1]];
+      direction = "up";
+      break;
+
+    case userGame[hit[0]][hit[1]] === 0 && direction === "up":
+      userGame[hit[0]][hit[1]] = 1;
+      hit = [initialHit[0], initialHit[1] - 1];
+      direction = "left";
+      break;
+
+    case userGame[hit[0]][hit[1]] === 0 && direction === "left":
+      userGame[hit[0]][hit[1]] = 1;
+      direction = "down";
+      hit = false;
+      // compTorpedo();
+      break;
+
+    default:
+      hit = false;
+      compTorpedo();
+  }
+};
+
 const compTorpedo = () => {
   if (
     hit === false ||
-    hit[0] > 8 ||
-    hit[1] > 8 ||
-    userGame[hit[0]][hit[1]] == 4
+    userGame[hit[0]][hit[1]] == 4 ||
+    userGame[hit[0]][hit[1]] == 1
   ) {
+    direction = "down";
     hit = false;
     while (true) {
       let row = getRandomInt(8);
       let column = getRandomInt(8);
       if (userGame[row][column] == 3) {
         userGame[row][column] = 4;
+        initialHit = [row, column];
         hit = [row + 1, column];
         computerGameClock++;
         break;
@@ -183,20 +269,13 @@ const compTorpedo = () => {
         break;
       }
     }
-  } else if (hit !== false && userGame[hit[0]][hit[1]] == 3) {
-    userGame[hit[0]][hit[1]] = 4;
-    console.log(userGame[hit[0]][hit[1]]);
-    hit = [hit[0] + 1, hit[1]];
-    computerGameClock++;
-  } else if (hit !== false && userGame[hit[0]][hit[1]] == 0) {
-    userGame[hit[0]][hit[1]] = 1;
-    hit = false;
-  } else {
-  }
+  } else compNextMove();
+
   console.log(hit);
   drawBoard(userGame, userGameboard);
   checkVictory();
 };
+
 const alertHandler = () => {
   if (shipCount === 5) {
     displayModal("Place your Battleship! <br> (4 grid squares)");
