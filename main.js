@@ -7,8 +7,6 @@ const modal = document.querySelector(".modal");
 const modalText = document.querySelector(".modal-content__message");
 const modalButton = document.querySelector("#modal-button");
 
-console.log(modalButton);
-
 let userGameClock = 0;
 let computerGameClock = 0;
 
@@ -109,23 +107,18 @@ const drawBoard = (player, gameBoard) => {
   gameBoard.innerHTML = "";
   let squareClass = "";
   let shipClass = "";
-  let check = "";
   for (let r = 0; r < player.length; r++) {
     for (let c = 0; c < player.length; c++) {
       if (player === userGame && player[r][c] === 3) {
         squareClass = "ship";
-        check = player[r][c];
       } else if (player === userGame && player[r][c] === 4) {
         squareClass = "hit";
         shipClass = "ship";
-        check = player[r][c];
       } else if (player[r][c] === 4) {
         squareClass = "hit";
-        check = player[r][c];
       } else if (player[r][c] === 1) {
         squareClass = "miss";
         shipClass = "";
-        check = player[r][c];
       } else {
         squareClass = "";
         shipClass = "";
@@ -167,18 +160,18 @@ const fireTorpedo = (event) => {
 };
 
 const compTorpedo = () => {
-  let row = getRandomInt(8);
-  let column = getRandomInt(8);
-
-  if (userGame[row][column] == 3) {
-    userGame[row][column] = 4;
-    computerGameClock++;
-  } else if (userGame[row][column] == 0) {
-    userGame[row][column] = 1;
+  while (true) {
+    let row = getRandomInt(8);
+    let column = getRandomInt(8);
+    if (userGame[row][column] == 3) {
+      userGame[row][column] = 4;
+      computerGameClock++;
+      break;
+    } else if (userGame[row][column] == 0) {
+      userGame[row][column] = 1;
+      break;
+    }
   }
-  // else if (userGame[row][column] == 4 || userGame[row][column] == 1) {
-  //   userGame[getRandomInt(8)][getRandomInt(8)];
-  // }
   drawBoard(userGame, userGameboard);
   checkVictory();
 };
