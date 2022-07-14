@@ -7,38 +7,15 @@ const modal = document.querySelector(".modal");
 const modalText = document.querySelector(".modal-content__message");
 const modalButton = document.querySelector("#modal-button");
 
-let userGameClock = 0;
-let computerGameClock = 0;
-
-let ships = [5, 4, 3, 2, 3];
-let shipCount = 0;
-
-let hit = false;
-let initialHit = "";
-
-let computerGame = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-let userGame = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
+const ships = [5, 4, 3, 2, 3];
+let userGameClock;
+let computerGameClock;
+let shipCount;
+let hit;
+let initialHit;
+let direction;
+let computerGame;
+let userGame;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
@@ -53,22 +30,30 @@ const removeModal = () => {
   modal.style.display = "none";
 };
 
-const checkShips = (array, idFunc) => {
+const checkVictory = () => {
+  if (computerGameClock === 17) {
+    setTimeout(() => displayModal("End of game, you lost!"), 200);
+  } else if (userGameClock === 17) {
+    setTimeout(() => displayModal("You Won!"), 200);
+  }
+};
+
+const checkDuplicateShips = (array, idFunc) => {
   const duplicateMap = new Map();
   for (const item of array) {
     const id = idFunc(item);
-    if (duplicateMap.has(id)) return 0;
+    if (duplicateMap.has(id)) return false;
     duplicateMap.set(id, item);
   }
-  console.log(array);
-  return 1;
+  return true;
 };
 
-const placeShips = () => {
+const getCompShipPos = () => {
   let isUnique = 0;
   let checkArr = [];
 
   while (true) {
+    console.log("get comp ship pos");
     ships.forEach((ship) => {
       let rowStart = getRandomInt(8);
       let colStart = getRandomInt(8);
@@ -92,18 +77,27 @@ const placeShips = () => {
       }
     });
 
-    isUnique = checkShips(checkArr, JSON.stringify);
+    isUnique = checkDuplicateShips(checkArr, JSON.stringify);
 
-    if (isUnique === 1 && checkArr.length === 17) {
-      console.log("hooray");
+    if (isUnique === true && checkArr.length === 17) {
       checkArr.forEach((coord) => {
         computerGame[coord[0]][coord[1]] = 3;
       });
       break;
     } else checkArr = [];
-
-    console.table(checkArr);
   }
+};
+
+const placeUserShips = (event) => {
+  let row = event.target.id.substr(1, 1);
+  let column = event.target.id.substr(2, 1);
+  if (userGame[row][column] == 0 && shipCount < 17) {
+    userGame[row][column] = 3;
+    shipCount++;
+    alertHandler();
+  } else displayModal("You can't place anymore!");
+
+  drawBoard(userGame, userGameboard);
 };
 
 const drawBoard = (player, gameBoard) => {
@@ -134,69 +128,9 @@ const drawBoard = (player, gameBoard) => {
   }
 };
 
-const checkVictory = () => {
-  if (computerGameClock === 17) {
-    setTimeout(() => displayModal("End of game, you lost!"), 200);
-  } else if (userGameClock === 17) {
-    setTimeout(() => displayModal("You Won!"), 200);
-  }
-};
-
-const fireTorpedo = (event) => {
-  let row = event.target.id.substr(1, 1);
-  let column = event.target.id.substr(2, 1);
-
-  if (computerGame[row][column] === 3) {
-    computerGame[row][column] = 4;
-    userGameClock++;
-  } else if (computerGame[row][column] === 0) {
-    computerGame[row][column] = 1;
-  } else if (
-    computerGame[row][column] === 1 ||
-    computerGame[row][column] === 4
-  ) {
-    displayModal("You've already fired there!");
-  }
-  drawBoard(computerGame, computerGameboard);
-  checkVictory();
-  userGameClock !== 17 ? setTimeout(() => compTorpedo(), 1000) : "";
-};
-
-let direction = "down";
-
 const compNextMove = () => {
-  console.log("hit " + hit);
-  console.log("init " + initialHit);
-  // if (userGame[hit[0]][hit[1]] == 3) {
-  //   userGame[hit[0]][hit[1]] = 4;
-  //   console.log(userGame[hit[0]][hit[1]]);
-  //   hit = [hit[0] + 1, hit[1]];
-  //   computerGameClock++;
-  // } else if (userGame[hit[0]][hit[1]] == 0) {
-  //   userGame[hit[0]][hit[1]] = 1;
-  // } else {
-  //   hit = false;
-  //   compTorpedo();
-  // }
-
-  console.log("hello", direction);
+  console.log("comp next move");
   switch (true) {
-    case hit[0] > 8:
-      direction = "up";
-      break;
-
-    case hit[1] > 8:
-      direction = "left";
-      break;
-
-    case hit[0] < 0:
-      direction = "down";
-      break;
-
-    case hit[0] < 0:
-      direction = "right";
-      break;
-
     case userGame[hit[0]][hit[1]] === 3:
       userGame[hit[0]][hit[1]] = 4;
       switch (direction) {
@@ -237,18 +171,22 @@ const compNextMove = () => {
       userGame[hit[0]][hit[1]] = 1;
       direction = "down";
       hit = false;
-      // compTorpedo();
       break;
 
     default:
       hit = false;
-      compTorpedo();
+      fireCompTorpedo();
   }
 };
 
-const compTorpedo = () => {
+const fireCompTorpedo = () => {
+  console.log("comp fire torpedo");
   if (
     hit === false ||
+    hit[0] > 8 ||
+    hit[0] < 0 ||
+    hit[1] > 8 ||
+    hit[1] < 0 ||
     userGame[hit[0]][hit[1]] == 4 ||
     userGame[hit[0]][hit[1]] == 1
   ) {
@@ -271,8 +209,28 @@ const compTorpedo = () => {
     }
   } else compNextMove();
 
-  console.log(hit);
   drawBoard(userGame, userGameboard);
+  checkVictory();
+};
+
+const fireUserTorpedo = (event) => {
+  let row = event.target.id.substr(1, 1);
+  let column = event.target.id.substr(2, 1);
+
+  if (computerGame[row][column] === 3) {
+    computerGame[row][column] = 4;
+    userGameClock++;
+    userGameClock !== 17 ? setTimeout(() => fireCompTorpedo(), 1000) : "";
+  } else if (computerGame[row][column] === 0) {
+    computerGame[row][column] = 1;
+    userGameClock !== 17 ? setTimeout(() => fireCompTorpedo(), 1000) : "";
+  } else if (
+    computerGame[row][column] === 1 ||
+    computerGame[row][column] === 4
+  ) {
+    displayModal("You've already fired there!");
+  }
+  drawBoard(computerGame, computerGameboard);
   checkVictory();
 };
 
@@ -293,24 +251,15 @@ const alertHandler = () => {
   }
 };
 
-const placeUserShips = (event) => {
-  let row = event.target.id.substr(1, 1);
-  let column = event.target.id.substr(2, 1);
-  if (userGame[row][column] == 0 && shipCount < 17) {
-    userGame[row][column] = 3;
-    shipCount++;
-    alertHandler();
-  } else displayModal("You can't place anymore!");
-
-  drawBoard(userGame, userGameboard);
-};
-
 const startGame = () => {
+  direction = "down";
+
   computerGameboard.style.display = "none";
   shipCount = 0;
   userGameClock = 0;
   computerGameClock = 0;
-
+  initialHit = "";
+  hit = false;
   computerGame = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -334,7 +283,7 @@ const startGame = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
-  placeShips();
+  getCompShipPos();
 
   gameContainer.style.display = "flex";
   drawBoard(userGame, userGameboard);
@@ -342,7 +291,7 @@ const startGame = () => {
 };
 
 userGameboard.addEventListener("click", placeUserShips);
-computerGameboard.addEventListener("click", fireTorpedo);
+computerGameboard.addEventListener("click", fireUserTorpedo);
 playButton.addEventListener("click", startGame);
 if (modalButton) {
   modalButton.addEventListener("click", removeModal);
