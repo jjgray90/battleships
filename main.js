@@ -53,7 +53,6 @@ const getCompShipPos = () => {
   let checkArr = [];
 
   while (true) {
-    console.log("get comp ship pos");
     ships.forEach((ship) => {
       let rowStart = getRandomInt(8);
       let colStart = getRandomInt(8);
@@ -129,7 +128,6 @@ const drawBoard = (player, gameBoard) => {
 };
 
 const compNextMove = () => {
-  console.log("comp next move");
   switch (true) {
     case userGame[hit[0]][hit[1]] === 3:
       userGame[hit[0]][hit[1]] = 4;
@@ -184,7 +182,6 @@ const compNextMove = () => {
 };
 
 const fireCompTorpedo = () => {
-  console.log("comp fire torpedo");
   if (
     hit === false ||
     hit[0] > 8 ||
