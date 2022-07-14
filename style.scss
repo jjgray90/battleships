@@ -1,14 +1,13 @@
 @use "./variables" as *;
 @use "./modal";
 
-
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
-body {
+.game {
   background-color: #00033e;
   height: 100vh;
   padding: 1rem 0;
@@ -17,7 +16,7 @@ body {
   justify-content: space-evenly;
   align-items: center;
 
-  h1 {
+  .game__game-heading {
     color: $text-color;
     font-size: 2.5rem;
     font-weight: 400;
@@ -30,24 +29,23 @@ body {
       1px 18px 35px $text-shadow-tertiary, 1px 20px 60px $text-shadow-secondary;
   }
 
-  .game-container {
+  .game__game-container {
     display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
 
-    .game-board {
+    .game__game-board {
       display: grid;
       grid-template-columns: repeat(9, 25px);
       grid-template-rows: repeat(9, 25px);
-      // border: 2px solid grey;
 
       &--computer {
         display: none;
       }
 
-      .game-board__square {
+      .game__game-board-square {
         border: 0.5px solid lightblue;
         background-color: #009dc4;
         display: flex;
@@ -80,7 +78,7 @@ body {
     }
   }
 
-  #button {
+  #game-button {
     color: darkred;
     font-weight: 400;
     border: unset;
@@ -103,13 +101,13 @@ body {
 }
 
 @media screen and (min-width: 480px) {
-  body {
-    h1 {
+  .game {
+    .game__game-heading {
       font-size: 3.5rem;
     }
 
-    .game-container {
-      .game-board {
+    .game__game-container {
+      .game__game-board {
         grid-template-columns: repeat(9, 35px);
         grid-template-rows: repeat(9, 35px);
       }

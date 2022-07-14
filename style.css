@@ -10,7 +10,7 @@
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
 }
-.modal .modal-content {
+.modal .modal__modal-content {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -43,11 +43,11 @@
     opacity: 1;
   }
 }
-.modal .modal-content .modal-content__message {
+.modal .modal__modal-content .modal__modal-content-message {
   font-family: "Courier Prime", monospace;
   text-align: center;
 }
-.modal .modal-content #modal-button {
+.modal .modal__modal-content #modal-button {
   border: unset;
   border-radius: 5px;
   background-color: #d0342c;
@@ -57,7 +57,7 @@
   padding: 0.4rem 0.8rem;
   cursor: pointer;
 }
-.modal .modal-content #modal-button:active {
+.modal .modal__modal-content #modal-button:active {
   position: relative;
   box-shadow: unset;
   right: -2px;
@@ -70,7 +70,7 @@
   box-sizing: border-box;
 }
 
-body {
+.game {
   background-color: #00033e;
   height: 100vh;
   padding: 1rem 0;
@@ -79,7 +79,7 @@ body {
   justify-content: space-evenly;
   align-items: center;
 }
-body h1 {
+.game .game__game-heading {
   color: #858585;
   font-size: 2.5rem;
   font-weight: 400;
@@ -87,22 +87,22 @@ body h1 {
   -webkit-text-stroke: 0.5px black;
   text-shadow: 1px 1px 0 lightgrey, 1px 2px 0 lightgrey, 1px 3px 0 lightgrey, 1px 4px 0 lightgrey, 1px 5px 0 lightgrey, 1px 6px 0 lightgrey, 1px 12px 6px rgba(32, 77, 144, 0.4), 1px 15px 10px rgba(32, 77, 144, 0.2), 1px 18px 35px rgba(32, 77, 144, 0.2), 1px 20px 60px rgba(32, 77, 144, 0.4);
 }
-body .game-container {
+.game .game__game-container {
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
 }
-body .game-container .game-board {
+.game .game__game-container .game__game-board {
   display: grid;
   grid-template-columns: repeat(9, 25px);
   grid-template-rows: repeat(9, 25px);
 }
-body .game-container .game-board--computer {
+.game .game__game-container .game__game-board--computer {
   display: none;
 }
-body .game-container .game-board .game-board__square {
+.game .game__game-container .game__game-board .game__game-board-square {
   border: 0.5px solid lightblue;
   background-color: #009dc4;
   display: flex;
@@ -112,24 +112,24 @@ body .game-container .game-board .game-board__square {
   height: 100%;
   cursor: pointer;
 }
-body .game-container .game-board .hit {
+.game .game__game-container .game__game-board .hit {
   height: 50%;
   width: 50%;
   border-radius: 50%;
   background-color: red;
 }
-body .game-container .game-board .miss {
+.game .game__game-container .game__game-board .miss {
   height: 50%;
   width: 50%;
   border-radius: 50%;
   background-color: whitesmoke;
 }
-body .game-container .game-board .ship {
+.game .game__game-container .game__game-board .ship {
   height: 100%;
   width: 100%;
   background-color: darkgray;
 }
-body #button {
+.game #game-button {
   color: darkred;
   font-weight: 400;
   border: unset;
@@ -142,7 +142,7 @@ body #button {
   box-shadow: 4px 4px darkred;
   cursor: pointer;
 }
-body #button:active {
+.game #game-button:active {
   position: relative;
   box-shadow: unset;
   right: -6px;
@@ -150,10 +150,10 @@ body #button:active {
 }
 
 @media screen and (min-width: 480px) {
-  body h1 {
+  .game .game__game-heading {
     font-size: 3.5rem;
   }
-  body .game-container .game-board {
+  .game .game__game-container .game__game-board {
     grid-template-columns: repeat(9, 35px);
     grid-template-rows: repeat(9, 35px);
   }

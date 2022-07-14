@@ -1,10 +1,10 @@
-const gameContainer = document.querySelector(".game-container");
-const userGameboard = document.querySelector(".game-board--user");
-const computerGameboard = document.querySelector(".game-board--computer");
-const gameSquare = document.querySelector(".game-board__square");
-const playButton = document.querySelector(".game-button");
+const gameContainer = document.querySelector(".game__game-container");
+const userGameboard = document.querySelector(".game__game-board--user");
+const computerGameboard = document.querySelector(".game__game-board--computer");
+const gameSquare = document.querySelector(".game__game-board-square");
+const playButton = document.querySelector(".game__game-button");
 const modal = document.querySelector(".modal");
-const modalText = document.querySelector(".modal-content__message");
+const modalText = document.querySelector(".modal__modal-content-message");
 const modalButton = document.querySelector("#modal-button");
 
 const ships = [5, 4, 3, 2, 3];
@@ -38,10 +38,10 @@ const checkVictory = () => {
   }
 };
 
-const checkDuplicateShips = (array, idFunc) => {
+const checkDuplicates = (array) => {
   const duplicateMap = new Map();
   for (const item of array) {
-    const id = idFunc(item);
+    const id = JSON.stringify(item);
     if (duplicateMap.has(id)) return false;
     duplicateMap.set(id, item);
   }
@@ -77,7 +77,7 @@ const getCompShipPos = () => {
       }
     });
 
-    isUnique = checkDuplicateShips(checkArr, JSON.stringify);
+    isUnique = checkDuplicates(checkArr);
 
     if (isUnique === true && checkArr.length === 17) {
       checkArr.forEach((coord) => {
@@ -121,7 +121,7 @@ const drawBoard = (player, gameBoard) => {
         shipClass = "";
       }
 
-      gameBoard.innerHTML += `<div class="game-board__square ${shipClass}" id=${
+      gameBoard.innerHTML += `<div class="game__game-board-square ${shipClass}" id=${
         "s" + r + c
       }><div class=${squareClass} id=${"s" + r + c}></div></div>`;
     }
@@ -137,14 +137,18 @@ const compNextMove = () => {
         case "down":
           hit = [hit[0] + 1, hit[1]];
           break;
+
         case "right":
           hit = [hit[0], hit[1] + 1];
           break;
+
+        case "left":
+          hit = [hit[0], hit[1] - 1];
+          break;
+
         case "up":
           hit = [hit[0] - 1, hit[1]];
           break;
-        case "left":
-          hit = [hit[0], hit[1] - 1];
       }
       computerGameClock++;
       break;
@@ -157,20 +161,20 @@ const compNextMove = () => {
 
     case userGame[hit[0]][hit[1]] === 0 && direction === "right":
       userGame[hit[0]][hit[1]] = 1;
-      hit = [initialHit[0] - 1, initialHit[1]];
-      direction = "up";
-      break;
-
-    case userGame[hit[0]][hit[1]] === 0 && direction === "up":
-      userGame[hit[0]][hit[1]] = 1;
       hit = [initialHit[0], initialHit[1] - 1];
       direction = "left";
       break;
 
     case userGame[hit[0]][hit[1]] === 0 && direction === "left":
       userGame[hit[0]][hit[1]] = 1;
-      direction = "down";
+      hit = [initialHit[0] - 1, initialHit[1]];
+      direction = "up";
+      break;
+
+    case userGame[hit[0]][hit[1]] === 0 && direction === "up":
+      userGame[hit[0]][hit[1]] = 1;
       hit = false;
+      direction = "down";
       break;
 
     default:
@@ -193,8 +197,8 @@ const fireCompTorpedo = () => {
     direction = "down";
     hit = false;
     while (true) {
-      let row = getRandomInt(8);
-      let column = getRandomInt(8);
+      let row = getRandomInt(9);
+      let column = getRandomInt(9);
       if (userGame[row][column] == 3) {
         userGame[row][column] = 4;
         initialHit = [row, column];

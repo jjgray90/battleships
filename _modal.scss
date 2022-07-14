@@ -11,7 +11,7 @@
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
 
-  .modal-content {
+  .modal__modal-content {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -35,7 +35,7 @@
       }
     }
 
-    .modal-content__message {
+    .modal__modal-content-message {
       font-family: "Courier Prime", monospace;
       text-align: center;
     }
