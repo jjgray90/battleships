@@ -2,6 +2,8 @@
 
 <img width="1920" alt="Screenshot 2022-07-15 at 13 16 38" src="https://user-images.githubusercontent.com/59710385/179256494-da6f05e1-25db-42f8-aa7b-901043f40c6b.png">
 
+Live Site: https://battleships.jjgray.me
+
 ## Brief
 
  - Build a fully functioning browser based game using HTML, CSS and Javascript.
